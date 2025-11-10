@@ -54,10 +54,10 @@ export async function tambahData() {
 //fungsi untuk mengambil data siswa dari firestore
 export async function daftarSiswa() {
     //refrensi ke daftar dokumen siswa
-    const refDokumen = collection(db,"siswa")
+    const refDokumen = collection(db, "siswa")
     
     //melakukan permintaan atau query ke referensi daftar dokumen
-    const kueri = query(refDokumen,orderBy("nama"))
+    const kueri = query(refDokumen, orderBy("nama"))
     
     // menampung data cuplikan kueri
     const cuplikanKueri = await getDocs(kueri)
@@ -68,6 +68,7 @@ export async function daftarSiswa() {
     //loop cuplikan kueri, simpan ke variabel hasil kueri
     cuplikanKueri.forEach((dokumen) => {
         hasilKueri.push({
+            id: dokumen.id,
             nama: dokumen.data().nama,
             kelas: dokumen.data().kelas
             
@@ -76,4 +77,23 @@ export async function daftarSiswa() {
     
     //kembalikan nilai daftar siswa ke pemanggil fungsi
     return hasilKueri
+}
+
+
+//fungsi untuk menghapus data siswa berdasarkan id data nya
+export async function hapusSiswa(id) {
+    //hapus data siswa
+    await deleteDoc(doc(db, "siswa",id))
+}
+
+// ubah data siswa
+export async function ubahSiswa(id,namaPengganti,kelasPengganti) {
+    //ubah data siswa
+    await updateDoc(
+        doc(db,"siswa",id),
+        {
+            nama: namaPengganti,
+            kelas: kelasPengganti
+        }
+    )
 }
